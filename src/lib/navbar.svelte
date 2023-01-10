@@ -1,4 +1,4 @@
-<!-- svelte-ignore a11y-label-has-associated-control -->
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <script lang="ts">
 	import { page } from '$app/stores';
 	import Link from './link.svelte';
@@ -9,7 +9,7 @@
 	};
 </script>
 
-<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+<!-- svelte-ignore a11y-label-has-associated-control -->
 
 <nav class="navbar bg-base-100 shadow-md py-2 px-6 md:px-3 lg:px-2">
 	<div class="container mx-auto">
@@ -22,7 +22,7 @@
 			>
 		</div>
 
-		<ul class="px-1 gap-3 items-center hidden md:flex lg:flex mr-3">
+		<ul class="px-1 gap-3 items-center hidden md:flex lg:flex {user ? 'mr-4' : ''}">
 			<Link path={'/home'} active="primary">Home</Link>
 
 			{#if !user}
@@ -40,7 +40,7 @@
 			<button class="dropdown dropdown-end">
 				<label for="#" class="btn btn-ghost btn-circle avatar online">
 					<div class="w-10 rounded-full">
-						<img src={user?.avatarUrl} alt={user?.username} />
+						<img src={user?.avatarUrl} alt={user?.username} referrerpolicy="no-referrer" />
 					</div>
 				</label>
 

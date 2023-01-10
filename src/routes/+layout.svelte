@@ -1,6 +1,6 @@
 <script lang="ts">
-	import '../app.css';
-	import '../nprogress.css';
+	import '../styles/app.css';
+	import '../styles/nprogress.css';
 
 	import NProgress from 'nprogress';
 	import Navbar from '../lib/navbar.svelte';
@@ -12,7 +12,9 @@
 	import { navigating } from '$app/stores';
 	import LogoutModal from '$lib/logoutModal.svelte';
 
-	NProgress.configure({});
+	NProgress.configure({
+		minimum: 0.16
+	});
 
 	$: {
 		if ($navigating) {

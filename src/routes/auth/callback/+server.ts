@@ -34,7 +34,8 @@ export const GET: RequestHandler = async ({ locals, url, cookies }: RequestEvent
 			.authWithOAuth2(provider.name, code || '', codeVerifier || '', redirectURL);
 
 		await locals.pb?.collection('users').update(result.record.id, {
-			avatarUrl: result.meta?.avatarUrl
+			avatarUrl: result.meta?.avatarUrl,
+			name: result.meta?.name
 		});
 	} catch (err) {
 		console.log(err);

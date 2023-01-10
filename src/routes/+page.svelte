@@ -1,13 +1,28 @@
 <script lang="ts">
-	import type { LayoutServerData, PageData } from './$types';
+	import AuctionSlider from '$lib/test/auctionSlider.svelte';
+	import type { Auction } from '$lib/types';
 
-	export let data: LayoutServerData;
+	export let data: { isAuth: boolean; items: Auction[] };
+	const { isAuth, items } = data;
 </script>
 
-<div class="flex-1 w-full flex flex-col items-center justify-center">
-	<h1>Home Page</h1>
-
-	{#if data?.user}
-		<h1 class="font-bold text-xl text-center">Your email is : {data?.user.email}</h1>
-	{/if}
+<div class="flex-1 w-full bg-base-100 flex items-center justify-center">
+	<div class="hero-content flex-col lg:flex-row lg:gap-56 px-6 lg:px-0 gap-10">
+		<div>
+			<h1 class="text-5xl font-bold">Welcome To Pocket Auction</h1>
+			<p class="py-6 mb-5 prose">
+				Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
+				quasi. In deleniti eaque aut repudiandae et a id nisi.
+			</p>
+			<div class="flex gap-2">
+				{#if isAuth}
+					<a href="/home" class="btn btn-primary normal-case">Home</a>
+				{:else}
+					<a href="/register" class="btn btn-primary normal-case">Get Started</a>
+				{/if}
+				<a href="/about" class="btn btn-neutral normal-case">About Us</a>
+			</div>
+		</div>
+		<AuctionSlider {items} />
+	</div>
 </div>

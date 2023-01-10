@@ -26,3 +26,6 @@ export const getDataForProvider = (
 		providerCodeVerifier: codeVerifier
 	};
 };
+
+export const getImageUrl = (collectionName: string, auctionId: string, fileName: string) =>
+	`http://127.0.0.1:8090/api/files/${collectionName}/${auctionId}/${fileName}`;
