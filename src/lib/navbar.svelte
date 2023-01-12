@@ -2,16 +2,12 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import Link from './link.svelte';
-	export let user: import('pocketbase').default['authStore']['model'];
-
-	const handleLogout = (e: MouseEvent) => {
-		e.preventDefault();
-	};
+	export let user: User | null;
 </script>
 
 <!-- svelte-ignore a11y-label-has-associated-control -->
 
-<nav class="navbar bg-base-100 shadow-md py-2 px-6 md:px-3 lg:px-2">
+<nav class="navbar bg-base-100 shadow-md py-2 px-6 md:px-3 lg:px-2 sticky top-0 z-50">
 	<div class="container mx-auto">
 		<div class="flex-1 ">
 			<a
@@ -40,7 +36,7 @@
 			<button class="dropdown dropdown-end">
 				<label for="#" class="btn btn-ghost btn-circle avatar online">
 					<div class="w-10 rounded-full">
-						<img src={user?.avatarUrl} alt={user?.username} referrerpolicy="no-referrer" />
+						<img src={user.avatarUrl} alt={user.username} referrerpolicy="no-referrer" />
 					</div>
 				</label>
 

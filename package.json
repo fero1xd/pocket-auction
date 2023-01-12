@@ -37,6 +37,7 @@
 		"@tailwindcss/typography": "^0.5.8",
 		"@zerodevx/svelte-toast": "1.0.0-rc.1",
 		"daisyui": "^2.46.1",
-		"pocketbase": "^0.9.1"
+		"pocketbase": "^0.9.1",
+		"zod": "^3.20.2"
 	}
 }

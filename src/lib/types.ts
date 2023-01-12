@@ -1,14 +1,19 @@
 import type { Record } from 'pocketbase';
+import type { z } from 'zod/lib';
+import type { CreateAccountSchema, LoginSchema } from './utils';
 
-export type LoginPayload = {
+export type RegisterPayload = {
+	name: string;
 	email: string;
 	password: string;
 };
 
-export type RegisterPayload = {
-	username: string;
-	email: string;
-	password: string;
+export type ResedentialPayload = {
+	country: string;
+	state: string;
+	address1: string;
+	address2?: string;
+	nearpoint?: string;
 };
 
 export type ProviderData = {
@@ -32,3 +37,26 @@ export type Auction = Record & {
 };
 
 export type AuctionStatus = 'live' | 'not started' | 'ended';
+
+export type CredentialsInput = 'name' | 'email' | 'password';
+export type ResedentialInput = 'country' | 'state' | 'address1' | 'address2' | 'nearpoint';
+
+export type AvailableAuthProviders = 'github' | 'google' | 'facebook' | 'discord';
+
+export type LoginPayload = z.infer<typeof LoginSchema>;
+export type CreateAccountPayload = z.infer<typeof CreateAccountSchema>;
+
+declare global {
+	type User = import('pocketbase').default['authStore']['model'] & {
+		username: string;
+		email: string;
+		verified: boolean;
+		avatarUrl: string;
+		name: string;
+		country: string;
+		state: string;
+		address1: string;
+		address2?: string;
+		nearpoint?: string;
+	};
+}

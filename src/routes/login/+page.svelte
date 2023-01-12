@@ -7,8 +7,10 @@
 	import Socials from '$lib/socials.svelte';
 	import type { ProviderData } from '$lib/types';
 	import { browser } from '$app/environment';
+	import FormInput from '$lib/formInput.svelte';
 
 	export let form: ActionData;
+
 	export let data: {
 		providers?: ProviderData[];
 	};
@@ -73,38 +75,29 @@
 		class="w-[400px] lg:w-[500px] px-6 lg:px-0"
 		use:enhance={handleSubmit}
 	>
-		<div class="form-control self-start w-full mb-5">
-			<div class="label">
-				<label for="email" class="label-text ">Email</label>
-			</div>
+		<FormInput
+			{loading}
+			label="Email"
+			type="email"
+			placeholder="example@domain.com"
+			name="email"
+			dispatchEvents={false}
+			errors={form?.errors?.email}
+			required={false}
+		/>
 
-			<input
-				id="email"
-				name="email"
-				type="text"
-				class="input input-bordered shadow-md"
-				disabled={loading}
-				placeholder="example@domain.com"
-			/>
-		</div>
-
-		<div class="form-control self-start w-full">
-			<div class="label">
-				<label for="password" class="label-text">Password</label>
-			</div>
-
-			<input
-				id="password"
-				name="password"
-				type="password"
-				class="input input-bordered shadow-md"
-				disabled={loading}
-				placeholder="*********"
-			/>
-			<label class="label justify-end" for="password">
-				<a href="/forgot-password" class="label-text-alt link link-hover">Forgot password?</a>
-			</label>
-		</div>
+		<FormInput
+			{loading}
+			label="Password"
+			type="password"
+			placeholder="*********"
+			name="password"
+			dispatchEvents={false}
+			errors={form?.errors?.password}
+			required={false}
+		>
+			<a href="/forgot-password" class="label-text-alt link link-hover">Forgot password?</a>
+		</FormInput>
 
 		<div class="w-full mt-8 flex flex-col gap-3">
 			<button

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import AuctionSlider from '$lib/test/auctionSlider.svelte';
+	import AuctionSlider from '$lib/auction/auctionSlider.svelte';
 	import type { Auction } from '$lib/types';
 
 	export let data: { isAuth: boolean; items: Auction[] };
@@ -7,7 +7,7 @@
 </script>
 
 <div class="flex-1 w-full bg-base-100 flex items-center justify-center">
-	<div class="hero-content flex-col lg:flex-row lg:gap-56 px-6 lg:px-0 gap-10">
+	<div class="hero-content flex-col lg:flex-row lg:gap-56 px-6 lg:px-3 gap-4">
 		<div>
 			<h1 class="text-5xl font-bold">Welcome To Pocket Auction</h1>
 			<p class="py-6 mb-5 prose">
@@ -16,7 +16,7 @@
 			</p>
 			<div class="flex gap-2">
 				{#if isAuth}
-					<a href="/home" class="btn btn-primary normal-case">Home</a>
+					<a href="/home" class="btn btn-primary normal-case w-20">Home</a>
 				{:else}
 					<a href="/register" class="btn btn-primary normal-case">Get Started</a>
 				{/if}

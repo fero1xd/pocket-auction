@@ -19,7 +19,7 @@
 	const hasEnded = nowTime > endTime;
 </script>
 
-<div class="card card-compact lg:card-normal flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100 ">
+<div class="card card-compact lg:card-normal flex-shrink-0 w-full max-w-md shadow-2xl bg-base-100">
 	<figure class="max-h-60">
 		<img src={image} alt={name} class="object-scale-down" />
 	</figure>
@@ -34,7 +34,7 @@
 				<div class="badge badge-neutral">Ended</div>
 			{/if}
 		</h2>
-		<p class="max-h-40 overflow-y-scroll mt-4 mb-4">
+		<p class="max-h-40 overflow-y-scroll mb-4">
 			{description}
 		</p>
 		<div class="card-actions justify-end">

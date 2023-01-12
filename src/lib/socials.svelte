@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher<{ login: string }>();
+	import type { AvailableAuthProviders } from './types';
+	const dispatch = createEventDispatcher<{ login: AvailableAuthProviders }>();
 
-	const handleClick = (name: string) => {
+	const handleClick = (name: AvailableAuthProviders) => {
 		dispatch('login', name);
 	};
 </script>
@@ -25,10 +26,6 @@
 	<button class="btn flex-1  shadow-md" on:click={() => handleClick('google')} type="button">
 		<img src="/google.svg" alt="google" class="w-5 h-5" />
 	</button>
-
-	<!-- <button class="btn flex-1  shadow-md" on:click={() => handleClick('facebook')} type="button">
-		<img src="/facebook.svg" alt="facebook" class="w-5 h-5" />
-	</button> -->
 
 	<button class="btn flex-1  shadow-md" on:click={() => handleClick('discord')} type="button">
 		<img src="/discord.svg" alt="discord" class="w-5 h-5" />

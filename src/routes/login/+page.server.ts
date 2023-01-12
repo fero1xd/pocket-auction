@@ -1,6 +1,6 @@
-import type { LoginPayload } from '$lib/types';
-import { availableAuthProviders, getDataForProvider } from '$lib/utils';
+import { availableAuthProviders, getDataForProvider, LoginSchema } from '$lib/utils';
 import { fail } from '@sveltejs/kit';
+import { ZodError } from 'zod';
 import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async ({ locals, url }) => {
@@ -25,17 +25,26 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 
 export const actions: Actions = {
 	login: async ({ request, locals }) => {
-		const formData = Object.fromEntries(await request.formData()) as LoginPayload;
+		const formData = Object.fromEntries(await request.formData());
+		let result;
 
-		if (!formData.email || !formData.password) {
+		try {
+			result = LoginSchema.parse(formData);
+		} catch (e: unknown) {
+			if (e instanceof ZodError) {
+				const { fieldErrors } = e.flatten();
+				return fail(400, {
+					errors: fieldErrors
+				});
+			}
+
 			return fail(400, {
-				data: formData,
-				error: 'Invalid Email or Password.'
+				error: 'Please specify all the fields correctly.'
 			});
 		}
 
 		try {
-			await locals.pb.collection('users').authWithPassword(formData.email, formData.password);
+			await locals.pb.collection('users').authWithPassword(result.email, result.password);
 
 			if (!locals.pb?.authStore?.model?.verified) {
 				locals.pb.authStore.clear();
@@ -45,7 +54,7 @@ export const actions: Actions = {
 			}
 		} catch (err: any) {
 			return fail(err.data.code, {
-				error: err.data.message
+				error: err.data.message || 'An unknown error occured.'
 			});
 		}
 
