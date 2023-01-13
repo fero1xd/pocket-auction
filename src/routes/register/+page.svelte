@@ -91,6 +91,7 @@
 					goto('/login', { replaceState: true });
 				}, 3000);
 			} else if (json.error) {
+				console.log(json);
 				success = undefined;
 				error = json.error;
 			}

@@ -1,37 +1,34 @@
 <script lang="ts">
 	import type { Auction } from '$lib/types';
 	import AuctionCard from './auctionCard.svelte';
-
-	let current = 0;
-
-	const prevSlide = () => {
-		const isFirstSlide = current === 0;
-		const newIndex = isFirstSlide ? items.length - 1 : current - 1;
-		current = newIndex;
-	};
-	const nextSlide = () => {
-		const isLastSlide = current === items.length - 1;
-		const newIndex = isLastSlide ? 0 : current + 1;
-		current = newIndex;
-	};
-
+	import { Swiper, SwiperSlide } from 'swiper/svelte';
+	import { Pagination, Autoplay } from 'swiper';
 	export let items: Auction[];
 </script>
 
-<div class="flex relative p-5 lg:p-0">
-	{#if current === 0}
-		<AuctionCard auction={items[current]} />
-	{:else if current === 1}
-		<AuctionCard auction={items[current]} />
-	{:else}
-		<AuctionCard auction={items[current]} />
-	{/if}
-	<button
-		class="btn btn-circle btn-sm lg:btn-md absolute top-[50%] -left-3 lg:-left-14 opacity-60 hover:opacity-100"
-		on:click={prevSlide}>❮</button
+<div class="flex relative">
+	<Swiper
+		pagination={{
+			clickable: true,
+			dynamicBullets: true
+		}}
+		modules={[Autoplay, Pagination]}
+		slidesPerView={1}
+		loop={true}
+		autoplay={{
+			delay: 2000,
+			disableOnInteraction: false
+		}}
+		class="shadow-2xl rounded-xl w-[350px] h-[440px] lg:w-[400px] lg:h-[455px]"
 	>
-	<button
-		class="btn btn-circle btn-sm lg:btn-md absolute top-[50%] -right-3 lg:-right-14 opacity-60 hover:opacity-100"
-		on:click={nextSlide}>❯</button
-	>
+		<SwiperSlide class="bg-base-100 ">
+			<AuctionCard auction={items[0]} />
+		</SwiperSlide>
+		<SwiperSlide class="bg-base-100 ">
+			<AuctionCard auction={items[1]} />
+		</SwiperSlide>
+		<SwiperSlide class="bg-base-100 ">
+			<AuctionCard auction={items[2]} />
+		</SwiperSlide>
+	</Swiper>
 </div>

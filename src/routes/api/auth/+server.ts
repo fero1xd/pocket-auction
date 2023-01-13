@@ -28,7 +28,11 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 
 		await locals.pb.collection('users').requestVerification(data.email);
 	} catch (e: any) {
-		console.log(e);
+		const errData = e.data.data;
+		if (errData.email && errData.email.message) {
+			return json({ error: e.data.data.email.message }, { status: e.data.code });
+		}
+
 		return json({ error: e.data.message }, { status: e.data.code });
 	}
 

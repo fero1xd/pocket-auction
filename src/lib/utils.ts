@@ -80,7 +80,10 @@ export const ResedentialSchema = z.object({
 });
 
 export const LoginSchema = z.object({
-	email: z.string().min(1, { message: 'Provided email is invalid' }).email(),
+	email: z
+		.string()
+		.min(1, { message: 'Email is required' })
+		.email({ message: 'Provided email is invalid' }),
 	password: z
 		.string()
 		.min(6, { message: 'Password must be atleast 6 characters long' })
@@ -91,11 +94,14 @@ export const LoginSchema = z.object({
 export const CredentialsSchema = z.object({
 	name: z
 		.string()
-		.min(1, { message: 'Name must be 1 character long' })
+		.min(1, { message: 'Name is required' })
 		.max(64, { message: 'Name cannot be greater than 64 characters' }),
-	email: z.string().min(1, { message: 'Provided email is invalid' }).email(),
-	password: z
+	email: z
 		.string()
+		.min(1, { message: 'Email is required' })
+		.email({ message: 'Provided email is invalid' }),
+	password: z
+		.string({ required_error: 'Password is required' })
 		.min(6, { message: 'Password must be atleast 6 characters long' })
 		.max(32, { message: 'Password cannot be greater than 32 characters' })
 		.trim()
