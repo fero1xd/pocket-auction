@@ -8,6 +8,7 @@
 	import type { ProviderData } from '$lib/types';
 	import { browser } from '$app/environment';
 	import FormInput from '$lib/formInput.svelte';
+	import { addErrorShake } from '$lib/utils';
 
 	export let form: ActionData;
 
@@ -18,10 +19,10 @@
 
 	let loading = false;
 
-	const handleSubmit = ({ form }: { form: HTMLFormElement }) => {
+	const handleSubmit = (e: any) => {
 		if (loading) return;
 		loading = true;
-
+		const formEl = e.form as HTMLFormElement;
 		return async ({ result, update }: { result: ActionResult; update: any }) => {
 			switch (result.type) {
 				case 'success':
@@ -35,8 +36,16 @@
 
 					break;
 				case 'failure':
-					form.reset();
+					formEl.reset();
 					await update();
+
+					const errors = form?.errors;
+					if (!errors) break;
+
+					for (const id of Object.keys(errors)) {
+						addErrorShake(id);
+					}
+
 					break;
 				case 'error':
 					await applyAction(result);
@@ -76,7 +85,7 @@
 		use:enhance={handleSubmit}
 	>
 		<FormInput
-			{loading}
+			loading={form?.success ? true : loading}
 			label="Email"
 			type="email"
 			placeholder="example@domain.com"
@@ -84,10 +93,11 @@
 			dispatchEvents={false}
 			errors={form?.errors?.email}
 			required={false}
+			id="email"
 		/>
 
 		<FormInput
-			{loading}
+			loading={form?.success ? true : loading}
 			label="Password"
 			type="password"
 			placeholder="*********"
@@ -95,6 +105,7 @@
 			dispatchEvents={false}
 			errors={form?.errors?.password}
 			required={false}
+			id="password"
 		>
 			<a href="/forgot-password" class="label-text-alt link link-hover">Forgot password?</a>
 		</FormInput>
@@ -102,7 +113,9 @@
 		<div class="w-full mt-8 flex flex-col gap-3">
 			<button
 				type="submit"
-				class="shadow-lg btn btn-primary w-full {loading ? 'loading btn-disabled' : ''}"
+				class="shadow-lg btn btn-primary w-full {loading
+					? 'loading btn-disabled'
+					: ''} {form?.success ? 'btn-disabled' : ''}"
 				disabled={loading || form?.success}>Login</button
 			>
 			{#if form?.error || form?.success}

@@ -4,23 +4,32 @@
 	import type { CredentialInputChangeEvent, CredentialsFormEvent } from '$lib/interfaces';
 	import Socials from '$lib/socials.svelte';
 	import type { RegisterPayload, AvailableAuthProviders, CredentialsInput } from '$lib/types';
-	import { CredentialsSchema } from '$lib/utils';
+	import { addErrorShake, CredentialsSchema } from '$lib/utils';
 	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher<CredentialsFormEvent>();
 
 	const handleSubmit = (e: Event) => {
 		e.preventDefault();
-		credentialsError = {};
+		checkAndDispatch(credentialsData);
+	};
 
-		const result = CredentialsSchema.safeParse(credentialsData);
+	export function checkAndDispatch(data: RegisterPayload) {
+		credentialsError = {};
+		const result = CredentialsSchema.safeParse(data);
+
 		if (!result.success) {
 			credentialsError = result.error.flatten().fieldErrors;
+
+			for (const i of Object.keys(credentialsError)) {
+				addErrorShake(i);
+			}
+
 			return;
 		}
 
 		dispatch('submit', result.data);
-	};
+	}
 
 	const handleSocialLogin = (e: CustomEvent<AvailableAuthProviders>) => {
 		dispatch('login', e.detail);
@@ -41,7 +50,7 @@
 <form class="w-full" on:submit={handleSubmit}>
 	<div class="flex gap-0 lg:gap-3 w-full flex-col lg:flex-row">
 		<FormInput
-			{loading}
+			loading={success ? true : loading}
 			type="text"
 			placeholder="John Doe"
 			name="name"
@@ -50,9 +59,10 @@
 			on:change={handleChange}
 			required={false}
 			errors={credentialsError?.name}
+			id="name"
 		/>
 		<FormInput
-			{loading}
+			loading={success ? true : loading}
 			type="email"
 			placeholder="example@domain.com"
 			name="email"
@@ -62,10 +72,11 @@
 			on:change={handleChange}
 			required={false}
 			errors={credentialsError?.email}
+			id="email"
 		/>
 	</div>
 	<FormInput
-		{loading}
+		loading={success ? true : loading}
 		type="password"
 		placeholder="*********"
 		name="password"
@@ -74,12 +85,15 @@
 		on:change={handleChange}
 		required={false}
 		errors={credentialsError?.password}
+		id="password"
 	/>
 
 	<div class="w-full mt-8 flex flex-col gap-3">
 		<button
 			type="submit"
-			class="shadow-lg btn btn-primary w-full {loading ? 'loading btn-disabled' : ''}">Next</button
+			class="shadow-lg btn btn-primary w-full {loading ? 'loading btn-disabled' : ''} {success
+				? 'btn-disabled'
+				: ''}">Next</button
 		>
 
 		<FormAlert {error} {success} />

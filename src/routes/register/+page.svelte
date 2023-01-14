@@ -8,7 +8,7 @@
 	import CredentialsInput from '$lib/register/credentialsInput.svelte';
 	import ResedentialInput from '$lib/register/resedentialInput.svelte';
 	import { browser } from '$app/environment';
-	import { CreateAccountSchema, CredentialsSchema } from '$lib/utils';
+	import { CreateAccountSchema } from '$lib/utils';
 	import NProgress from 'nprogress';
 	import { goto } from '$app/navigation';
 
@@ -22,8 +22,8 @@
 	const { providers } = data;
 
 	let step = 1;
+	let credentialSubmit: (data: RegisterPayload) => void;
 	let loading = false;
-	let credentialsError: { name?: string[]; email?: string[]; password?: string[] };
 
 	const handleSocialLogin = (e: CustomEvent<AvailableAuthProviders>) => {
 		registerWithOauth(e.detail);
@@ -47,19 +47,19 @@
 		state: '',
 		address1: ''
 	};
+	let credentialsError: { name?: string[]; email?: string[]; password?: string[] } = {};
+
 	const handleCredentialsSubmit = (e: CustomEvent<RegisterPayload>) => {
 		credentialsData = e.detail;
-		console.log(credentialsData);
-
 		step = 2;
 	};
+
 	const handleResedentialSubmit = async (e: CustomEvent<ResedentialPayload>) => {
 		error = undefined;
 		success = undefined;
 		loading = true;
 
 		resedentialData = e.detail;
-
 		const result = CreateAccountSchema.safeParse({ ...credentialsData, ...resedentialData });
 		if (!result.success) {
 			error = 'Something went wrong.';
@@ -102,16 +102,9 @@
 		loading = false;
 	};
 
-	const handleStep = (next: number) => {
-		credentialsError = {};
-
-		const result = CredentialsSchema.safeParse(credentialsData);
-		if (!result.success) {
-			credentialsError = result.error.flatten().fieldErrors;
-			return;
-		}
-
-		step = next;
+	const handleStep = () => {
+		error = undefined;
+		credentialSubmit(credentialsData);
 	};
 </script>
 
@@ -120,12 +113,18 @@
 	<div class="mt-3 mb-5 lg:mb-8 flex gap-3 flex-col items-center justify-center w-full">
 		<h2 class="text-2xl lg:text-3xl font-bold">Create A New Account!</h2>
 		<ul class="steps">
-			<li class="text-xs step step-primary cursor-pointer mr-7" on:click={() => (step = 1)} />
+			<li
+				class="text-xs step step-primary cursor-pointer mr-7"
+				on:click={() => {
+					error = undefined;
+					step = 1;
+				}}
+			/>
 			<li
 				class="text-xs {step < 2 ? 'opacity-50' : ''} step cursor-pointer {step >= 2
 					? 'step-primary'
 					: ''}"
-				on:click={() => handleStep(2)}
+				on:click={handleStep}
 			/>
 		</ul>
 	</div>
@@ -136,17 +135,18 @@
 				{loading}
 				{error}
 				{success}
-				{credentialsData}
+				bind:credentialsData
+				bind:credentialsError
 				on:login={handleSocialLogin}
 				on:submit={handleCredentialsSubmit}
-				{credentialsError}
+				bind:checkAndDispatch={credentialSubmit}
 			/>
 		{:else if step === 2}
 			<ResedentialInput
 				{loading}
 				{error}
 				{success}
-				{resedentialData}
+				bind:resedentialData
 				on:login={handleSocialLogin}
 				on:submit={handleResedentialSubmit}
 			/>

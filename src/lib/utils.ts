@@ -106,3 +106,12 @@ export const CredentialsSchema = z.object({
 		.max(32, { message: 'Password cannot be greater than 32 characters' })
 		.trim()
 });
+
+export const addErrorShake = (id: string) => {
+	const el = document.getElementById(id);
+	if (!el) return;
+	el.classList.add('error_input');
+	el.addEventListener('animationend', () => {
+		el.classList.remove('error_input');
+	});
+};

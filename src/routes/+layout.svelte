@@ -3,7 +3,6 @@
 	import '../styles/nprogress.css';
 	import 'swiper/css';
 	import 'swiper/css/pagination';
-	import 'swiper/css/navigation';
 
 	import NProgress from 'nprogress';
 	import Navbar from '../lib/navbar.svelte';

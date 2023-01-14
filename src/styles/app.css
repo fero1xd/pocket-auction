@@ -10,6 +10,10 @@
 	--swiper-theme-color: #f28c18 !important;
 }
 
+.swiper {
+	position: relative !important;
+}
+
 .swiper-slide {
 	/* Center slide text vertically */
 	display: -webkit-box;
@@ -40,4 +44,20 @@
 
 .card_image {
 	height: 13rem !important;
+}
+
+.error_input {
+	animation: shake 300ms;
+}
+
+@keyframes shake {
+	25% {
+		transform: translate(4px);
+	}
+	50% {
+		transform: translate(-4px);
+	}
+	75% {
+		transform: translate(4px);
+	}
 }

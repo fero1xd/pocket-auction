@@ -15,6 +15,7 @@
 	export let errors: string[] | undefined = undefined;
 	export let required: boolean = true;
 	export let showRequiredIndicator: boolean = true;
+	export let id: string = '';
 
 	const handleInput = (e: any) => {
 		if (!dispatchEvents) return;
@@ -35,16 +36,30 @@
 		</label>
 	</div>
 
-	<input
-		{name}
-		{type}
-		class="input input-bordered shadow-md"
-		disabled={loading}
-		{placeholder}
-		on:input={handleInput}
-		{value}
-		{required}
-	/>
+	{#if id}
+		<input
+			{name}
+			{type}
+			{id}
+			class="input input-bordered shadow-md"
+			disabled={loading}
+			{placeholder}
+			on:input={handleInput}
+			{value}
+			{required}
+		/>
+	{:else}
+		<input
+			{name}
+			{type}
+			class="input input-bordered shadow-md"
+			disabled={loading}
+			{placeholder}
+			on:input={handleInput}
+			{value}
+			{required}
+		/>
+	{/if}
 
 	<label for="password" class="label py-0 pt-1 justify-between">
 		<span class="label-text-alt text-error">{errors ? errors.length && errors[0] : ''}</span>

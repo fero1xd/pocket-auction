@@ -4,33 +4,38 @@
 	import type { ResedentialFormEvent, ResedentialInputChangeEvent } from '$lib/interfaces';
 	import Socials from '$lib/socials.svelte';
 	import type { AvailableAuthProviders, ResedentialPayload } from '$lib/types';
-	import { ResedentialSchema } from '$lib/utils';
+	import { addErrorShake, ResedentialSchema } from '$lib/utils';
 	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher<ResedentialFormEvent>();
 
+	const dispatch = createEventDispatcher<ResedentialFormEvent>();
 	export let loading: boolean;
 	export let resedentialData: ResedentialPayload = {
 		country: '',
 		state: '',
 		address1: ''
 	};
-	let resedentialError:
-		| {
-				country?: string[];
-				state?: string[];
-				address1?: string[];
-				address2?: string[];
-				nearpoint?: string[];
-		  }
-		| undefined;
+	let resedentialError: {
+		country?: string[];
+		state?: string[];
+		address1?: string[];
+		address2?: string[];
+		nearpoint?: string[];
+	} = {};
 
 	const handleSubmit = (e: Event) => {
 		e.preventDefault();
+		if (loading || success) return;
+
 		resedentialError = {};
 
 		const result = ResedentialSchema.safeParse(resedentialData);
 		if (!result.success) {
 			resedentialError = result.error.flatten().fieldErrors;
+
+			for (const i of Object.keys(resedentialError)) {
+				addErrorShake(i);
+			}
+
 			return;
 		}
 
@@ -51,7 +56,7 @@
 <form class="w-full" on:submit={handleSubmit}>
 	<div class="flex gap-0 lg:gap-3 w-full flex-col lg:flex-row">
 		<FormInput
-			loading={false}
+			loading={success ? true : loading}
 			type="text"
 			placeholder="India"
 			name="country"
@@ -61,9 +66,10 @@
 			errors={resedentialError?.country}
 			required={false}
 			showRequiredIndicator={true}
+			id="country"
 		/>
 		<FormInput
-			loading={false}
+			loading={success ? true : loading}
 			type="text"
 			placeholder="Delhi"
 			name="state"
@@ -74,11 +80,12 @@
 			errors={resedentialError?.state}
 			required={false}
 			showRequiredIndicator={true}
+			id="state"
 		/>
 	</div>
 
 	<FormInput
-		loading={false}
+		loading={success ? true : loading}
 		type="text"
 		placeholder="Address Line 1"
 		name="address1"
@@ -89,9 +96,10 @@
 		errors={resedentialError?.address1}
 		required={false}
 		showRequiredIndicator={true}
+		id="address1"
 	/>
 	<FormInput
-		loading={false}
+		loading={success ? true : loading}
 		type="text"
 		placeholder="Address Line 2"
 		name="address2"
@@ -102,9 +110,10 @@
 		errors={resedentialError?.address2}
 		required={false}
 		showRequiredIndicator={false}
+		id="address2"
 	/>
 	<FormInput
-		loading={false}
+		loading={success ? true : loading}
 		type="text"
 		placeholder="Some Supermarket"
 		name="nearpoint"
@@ -115,12 +124,15 @@
 		errors={resedentialError?.nearpoint}
 		required={false}
 		showRequiredIndicator={false}
+		id="nearpoint"
 	/>
 
 	<div class="w-full mt-8 flex flex-col gap-3">
 		<button
 			type="submit"
-			class="shadow-lg btn btn-primary w-full {loading ? 'loading btn-disabled' : ''}"
+			class="shadow-lg btn btn-primary w-full {loading ? 'loading btn-disabled' : ''} {success
+				? 'btn-disabled'
+				: ''}"
 			disabled={success ? true : loading}>Register</button
 		>
 

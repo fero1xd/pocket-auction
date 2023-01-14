@@ -2,7 +2,7 @@
 	import type { Auction } from '$lib/types';
 	import AuctionCard from './auctionCard.svelte';
 	import { Swiper, SwiperSlide } from 'swiper/svelte';
-	import { Pagination, Autoplay } from 'swiper';
+	import { Pagination, Autoplay, Navigation } from 'swiper';
 	export let items: Auction[];
 </script>
 
