@@ -53,9 +53,9 @@ declare global {
 		verified: boolean;
 		avatarUrl: string;
 		name: string;
-		country: string;
-		state: string;
-		address1: string;
+		country?: string;
+		state?: string;
+		address1?: string;
 		address2?: string;
 		nearpoint?: string;
 	};
